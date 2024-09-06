@@ -1,17 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
 import React from 'react';
-import { BrowserRouter as Router,Route,Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import ProductsPage from './pages/ProductsPage';
 
 function App() {
   return (
     <Router>
-      <Switch>
-        <Route path='/' expact Component={HomePage}/>
-        <Route path='/about' Component={AboutPage}/>
-      </Switch>
+      <Routes>
+        <Route path="/" element={<HomePage />} exact />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/products" element={<ProductsPage/>} />
+      </Routes>
     </Router>
   );
 }
