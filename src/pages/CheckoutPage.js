@@ -1,39 +1,50 @@
 import React,{ useState } from "react";
 import { useCart } from '../context/CartContext';
+import * as Yup from 'yup';
+import { Formik,Form,Field,ErrorMessage } from "formik";
+
+const checkoutSchema = Yup.object().shape({
+    name:Yup.string().required('Name is required'),
+    address: Yup.string().required('Address us required'),
+    paymentMethod:Yup.string().required('Payment method is required')
+});
+
 
 function CheckoutPage(){
-    const { state } = useCart();
-    const [name,setName] = useState('');
-    const [address,setAddress] = useState('');
-    const [paymentMethod,setPaymentMethod] = useState('Credit Card');
-
-    const handleSubmit = (event) =>{
-        event.preventDefault();
-
-        alert(`Thank you, ${name}! Your order has been placed.`);
-    }
-
-    return (
-        <form onSubmit={handleSubmit}>
-            <h1>Checkout</h1>
-            <div>
-                <label>Name:</label>
-                <input type="text" value={name} onChange={e => setName(e.target.value)} required />
-            </div>
-            <div>
-                <label>Address:</label>
-                <input type="text" value={address} onChange={e => setName(e.target.value)} required />
-            </div>
-            <div>
-                <label>Payment Method:</label>
-                <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)}>
-                    <option value="Credit Card">Credit Card</option>
-                    <option value="Debit Card">Debit Card</option>
-                    <option value="PayPal">PayPal</option>
-                </select>
-            </div>
-            <button type="submit">Place Order</button>
-        </form>
+    return(
+        <Formik
+            initialValues={{ name:'',address:'',paymentMethod:'Credit Card' }} 
+            validationSchema={checkoutSchema}
+            onSubmit={(values,actions) => {
+                alert('Order has been submitted');
+                actions.setSubmitting(false);
+            }}
+        >
+            {formik => (
+                <Form>
+                    <div>
+                        <label>Name:</label>
+                        <Field type="text" name="name" />
+                        <ErrorMessage name="name" component="div"/>
+                    </div>
+                    <div>
+                        <label>Address:</label>
+                        <Field type="text" name="address" />
+                        <ErrorMessage name="address" component="div"/>
+                    </div>
+                    <div>
+                        <label>Payment Method:</label>
+                        <Field as="select" name="paymentMethod">
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="Debit Card">Debit Card</option>
+                            <option value="PayPal">PayPal</option>
+                        </Field>
+                        <ErrorMessage name="paymentMethod" component="div" />
+                    </div>
+                    <button type="submit">Place Order</button>
+                </Form>
+            )}
+        </Formik>
     );
 
 }
